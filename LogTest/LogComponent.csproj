@@ -42,12 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncLog.cs" />
     <Compile Include="AsyncLogV2.cs" />
-    <Compile Include="ILog.cs" />
-    <Compile Include="LogLine.cs" />
+    <Compile Include="FileManager.cs" />
+    <Compile Include="FileManagerTest.cs" />
+    <Compile Include="Interfaces\FileBuildStrategy.cs" />
+    <Compile Include="Interfaces\IFileManager.cs" />
+    <Compile Include="Interfaces\ILog.cs" />
+    <Compile Include="Interfaces\ILogLine.cs" />
     <Compile Include="LogLineV2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MidnightFileBuildStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,7 +5,12 @@ namespace LogTest
 {
     public interface ILog
     {
-        void Stop(bool withFlush = false);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="withFlush">if true it aborts without finishing</param>
+        /// <returns></returns>
+        Task Stop(bool withFlush = false);
 
         /// <summary>
         /// Write a message to the Log.
