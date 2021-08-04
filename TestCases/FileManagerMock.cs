@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TestCases 
 {
-    public class FileManagerMock : IFileManager
+    public class FileManagerMock : IFileManager, IFileManagerLogRestricted
     {
         public void CreateNewFile(DateTime dt)
         {

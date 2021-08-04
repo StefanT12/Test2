@@ -47,6 +47,7 @@
     <Compile Include="Interfaces\FileBuildStrategy.cs" />
     <Compile Include="Interfaces\IFileBuilder.cs" />
     <Compile Include="Interfaces\IFileManager.cs" />
+    <Compile Include="Interfaces\IFileManagerLogRestricted.cs" />
     <Compile Include="Interfaces\ILog.cs" />
     <Compile Include="Interfaces\ILogLine.cs" />
     <Compile Include="Interfaces\ILogWriter.cs" />

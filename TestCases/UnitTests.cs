@@ -53,7 +53,7 @@ namespace TestCases
 
             var fileManager = new FileManagerMock(output, folderPath);
             var timeProvider = new TimeProvider();
-            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(new TimeProvider(), fileManager));
+            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(timeProvider, fileManager));
             var count = 15;
 
             for(int i = 0; i < count; i++)
@@ -75,7 +75,7 @@ namespace TestCases
             
             var fileManager = new FileManagerMock(output, folderPath);
             var timeProvider = new TimeProvider();
-            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(new TimeProvider(), fileManager));
+            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(timeProvider, fileManager));
             
             var count = 50;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LogTest
 {
-    public class FileManager : IFileManager
+    public class FileManager : IFileManager, IFileManagerLogRestricted
     {
         //TODO check if any optimisation can be done here and with the AutoFlush
         private StreamWriter _writer;

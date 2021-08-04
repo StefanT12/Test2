@@ -18,23 +18,22 @@ namespace LogTest
 
         private readonly CancellationTokenSource _logToken;
 
-        private readonly IFileManager _fileManager;
+        private readonly IFileManagerLogRestricted _fileManager;
         private readonly IFileBuildStrategy _fbStrat;
         private readonly ITimeProvider _timeProvider;
 
         private bool _quitWithFlush;
 
-        public AsyncLogV2(ITimeProvider timeProvider, IFileManager fileManager, IFileBuildStrategy fbStrat)
+        public AsyncLogV2(ITimeProvider timeProvider, IFileManagerLogRestricted fileManager, IFileBuildStrategy fbStrat)
         {
             _logs = new ConcurrentQueue<LogLineV2>();
             _logToken = new CancellationTokenSource();
 
             _fileManager = fileManager;
-            _fbStrat = fbStrat;
+            _fbStrat = fbStrat; 
             _timeProvider = timeProvider;
 
             _fbStrat.Init();
-
             _currTask = Task.CompletedTask;
         }
 

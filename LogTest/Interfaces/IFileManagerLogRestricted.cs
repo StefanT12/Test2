@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogTest.Interfaces
 {
-    public interface IFileManager: IFileBuilder, ILogWriter, IDisposable
+    public interface IFileManagerLogRestricted: ILogWriter, IDisposable
     {
-
     }
 }
