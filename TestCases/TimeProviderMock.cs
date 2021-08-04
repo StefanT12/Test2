@@ -12,20 +12,16 @@ namespace TestCases
     {
         public DateTime GetTimeNow()
         {
-            _returnCount++;
+            _time = _time.AddMinutes(2);
 
-            if (_returnCount == 1)
-            {
-                return Convert.ToDateTime("1/1/2021 11:59:00 PM", new CultureInfo("en-US"));
-            }
-            else
-            {
-                return Convert.ToDateTime("1/2/2021 00:01:00 AM", new CultureInfo("en-US"));
-            }
-           
+            return _time;
         }
 
-        private int _returnCount;
-     
+        private DateTime _time;
+
+        public TimeProviderMock()
+        {
+            _time = Convert.ToDateTime("1/1/2021 11:57:00 PM", new CultureInfo("en-US"));
+        }
     }
 }

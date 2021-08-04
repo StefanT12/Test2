@@ -94,10 +94,12 @@ namespace TestCases
         public void CheckMidnightStrategyValidity()
         {
             /*  
-             *  MidnightFileBuildStrategy sets its time then it gets triggered when IsStratregyValid returns true;
-             *  TimeProviderMock returns 1/1/2021 11:59:00 PM when strategy sets its time,
-             *  then 1/2/2021 00:01:00 AM when validity is checked, therefore triggering the strategy 
-            */
+             *  MidnightFileBuildStrategy sets its time in Init() then gets triggered when IsStratregyValid returns true;
+             *  TimeProviderMock initializes with 1/1/2021 11:57:00 PM as DateTime
+             *  TimeProviderMock increments with 2 minutes per each call
+             *  First call, fbStrat.Init(), strategy initializez with 1/1/2021 11:59:00 PM as DateTime
+             *  Second call, fbStrat.IsStrategyValid() will be + 2 minutes from the initial DateTime, making the strategy trigger condition valid.
+             */
             IFileBuildStrategy fbStrat = new MidnightFileBuildStrategy(new TimeProviderMock(), new FileBuilderMock());
 
             fbStrat.Init();
