@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace LogTest.Interfaces
 {
-    public interface IFileBuildStrategy
+    public interface ITimeProvider
     {
-        void Init();
-        void Run();
-        bool IsStrategyValid();
+        DateTime GetTimeNow();
     }
 }

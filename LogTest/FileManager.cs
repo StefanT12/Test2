@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace LogTest
@@ -19,6 +17,7 @@ namespace LogTest
             if (!Directory.Exists(_path))
                 Directory.CreateDirectory(_path);
 
+
             this._writer = File.AppendText(_path+ @"\Log" + dt.ToString("yyyyMMdd HHmmss fff") + ".log");
 
             this._writer.Write("Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine);
@@ -29,6 +28,11 @@ namespace LogTest
         public async Task WriteInFile(ILogLine logLine)
         {
             await _writer.WriteAsync(logLine.GetLine());
+        }
+
+        public void Dispose()
+        {
+            _writer.Close();
         }
 
         public FileManager(string path)

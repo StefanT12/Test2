@@ -20,19 +20,22 @@ namespace LogTest
 
         private readonly IFileManager _fileManager;
         private readonly IFileBuildStrategy _fbStrat;
+        private readonly ITimeProvider _timeProvider;
 
         private bool _quitWithFlush;
 
-        public AsyncLogV2(IFileManager fileManager, IFileBuildStrategy fbStrat)
+        public AsyncLogV2(ITimeProvider timeProvider, IFileManager fileManager, IFileBuildStrategy fbStrat)
         {
             _logs = new ConcurrentQueue<LogLineV2>();
             _logToken = new CancellationTokenSource();
 
             _fileManager = fileManager;
             _fbStrat = fbStrat;
+            _timeProvider = timeProvider;
+
+            _fbStrat.Init();
 
             _currTask = Task.CompletedTask;
-            _fileManager.CreateNewFile(DateTime.Now);
         }
 
         private async Task RunLogger(CancellationToken token)
@@ -43,8 +46,8 @@ namespace LogTest
             {
                 try
                 {
+                    _fbStrat.Run();
                     await _fileManager.WriteInFile(log);
-                    _fbStrat.Run(_fileManager);
                 }
                 catch(Exception e)
                 {
@@ -58,7 +61,7 @@ namespace LogTest
             if (!withFlush)//cancel everything
             {
                 _logToken.Cancel();
-                _logToken.Dispose();
+               // _logToken.Dispose();
             }
             else
             {
@@ -66,13 +69,15 @@ namespace LogTest
             }
 
             await _currTask;
+
+            _fileManager.Dispose();
         }
 
         public void Write(string text)
         {
             if (_quitWithFlush || _logToken.IsCancellationRequested) return;
 
-            _logs.Enqueue(new LogLineV2 { Text = text, Timestamp = DateTime.Now });
+            _logs.Enqueue(new LogLineV2 { Text = text, Timestamp = _timeProvider.GetTimeNow() });
 
             if (!_currTask.IsCompleted) return;
 

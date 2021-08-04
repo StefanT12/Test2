@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace LogTest.Interfaces
 {
-    public interface IFileBuildStrategy
+    public interface ILogWriter
     {
-        void Init();
-        void Run();
-        bool IsStrategyValid();
+        Task WriteInFile(ILogLine logLine);
     }
 }

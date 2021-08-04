@@ -11,33 +11,33 @@ namespace LogTest
     public class MidnightFileBuildStrategy : IFileBuildStrategy
     {
         private DateTime _storedDateTime;
-        public void Run(IFileManager fileManager)
+        ITimeProvider _timeProvider;
+        IFileBuilder _fileBuilder;
+        public void Run()
         {
-            if ( (DateTime.Now is var dtNow) && TriggerCondition(dtNow) == true )
+            if(IsStrategyValid())
             {
-                fileManager.CreateNewFile(dtNow);
-                _storedDateTime = dtNow;
+                _storedDateTime = _timeProvider.GetTimeNow();
+                _fileBuilder.CreateNewFile(_storedDateTime);
             }
-        }
-     
-        public bool TriggerCondition(object param)
-        {
-            try
-            {
-                DateTime dt = (DateTime)param;
-                return _storedDateTime.Day - dt.Day != 0;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return false;
-            }
-           
         }
 
-        public MidnightFileBuildStrategy(DateTime _currDateTime)
+        public bool IsStrategyValid()
         {
-            _storedDateTime = _currDateTime;
+            return _storedDateTime.Day - _timeProvider.GetTimeNow().Day != 0;
+        }
+
+        public void Init()
+        {
+           
+            _storedDateTime = _timeProvider.GetTimeNow();
+            _fileBuilder.CreateNewFile(_storedDateTime);
+        }
+
+        public MidnightFileBuildStrategy(ITimeProvider timeProvider, IFileBuilder fileBuilder)
+        {
+            _timeProvider = timeProvider;
+            _fileBuilder = fileBuilder;
         }
     }
 }

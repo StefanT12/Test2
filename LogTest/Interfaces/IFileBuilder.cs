@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LogTest.Interfaces
 {
-    public interface IFileBuildStrategy
+    public interface IFileBuilder
     {
-        void Init();
-        void Run();
-        bool IsStrategyValid();
+        void CreateNewFile(DateTime dt);
+       
     }
 }

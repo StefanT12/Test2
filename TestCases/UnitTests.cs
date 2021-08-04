@@ -3,6 +3,7 @@ using LogTest.Interfaces;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -21,7 +22,9 @@ namespace TestCases
                 Directory.Delete(folderPath, true);
             }
 
-            var log = new AsyncLogV2(new FileManager(folderPath), new MidnightFileBuildStrategy(DateTime.Now));
+            var fileManager = new FileManager(folderPath);
+            var timeProvider = new TimeProvider();
+            var log = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(timeProvider, fileManager));
 
             log.Write("teeeest");
             await log.Stop(withFlush: true);
@@ -31,6 +34,7 @@ namespace TestCases
             foreach (var file in filesInDir)
             {
                 var text = File.ReadAllText(file);
+
                 if (!string.IsNullOrEmpty(text))
                 {
                     isSomethingWritten = true;
@@ -44,8 +48,12 @@ namespace TestCases
         [Test]
         public async Task CheckFlush()
         {
-            var logs = new List<ILogLine>();
-            var logger = new AsyncLogV2(new FileManagerTest(logs), new MidnightFileBuildStrategy(DateTime.Now));
+            var output = new List<ILogLine>();
+            var folderPath = @"C:\LogTest";
+
+            var fileManager = new FileManagerMock(output, folderPath);
+            var timeProvider = new TimeProvider();
+            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(new TimeProvider(), fileManager));
             var count = 15;
 
             for(int i = 0; i < count; i++)
@@ -56,14 +64,19 @@ namespace TestCases
 
             await logger.Stop(withFlush: true);
 
-            Assert.IsTrue(logs.Count == count);
+            Assert.IsTrue(output.Count == count);
         }
 
         [Test]
         public async Task CheckNoFlush()
         {
-            var logs = new List<ILogLine>();
-            var logger = new AsyncLogV2(new FileManagerTest(logs), new MidnightFileBuildStrategy(DateTime.Now));
+            var output = new List<ILogLine>();
+            var folderPath = @"C:\LogTest";
+            
+            var fileManager = new FileManagerMock(output, folderPath);
+            var timeProvider = new TimeProvider();
+            var logger = new AsyncLogV2(timeProvider, fileManager, new MidnightFileBuildStrategy(new TimeProvider(), fileManager));
+            
             var count = 50;
 
             for (var i = count; i > 0; i--)
@@ -74,19 +87,22 @@ namespace TestCases
 
             await logger.Stop(withFlush: false);
 
-            Assert.IsTrue(logs.Count <= count);
+            Assert.IsTrue(output.Count <= count);
         }
 
         [Test]
-        public void CheckMidnightStrategy()
+        public void CheckMidnightStrategyValidity()
         {
-            var dt1 = Convert.ToDateTime("1/1/2021 11:59:00 PM", new CultureInfo("en-US"));
+            /*  
+             *  MidnightFileBuildStrategy sets its time then it gets triggered when IsStratregyValid returns true;
+             *  TimeProviderMock returns 1/1/2021 11:59:00 PM when strategy sets its time,
+             *  then 1/2/2021 00:01:00 AM when validity is checked, therefore triggering the strategy 
+            */
+            IFileBuildStrategy fbStrat = new MidnightFileBuildStrategy(new TimeProviderMock(), new FileBuilderMock());
 
-            IFileBuildStrategy fbStrat = new MidnightFileBuildStrategy(dt1);
+            fbStrat.Init();
 
-            var dt2 = Convert.ToDateTime("1/2/2021 00:01:00 AM", new CultureInfo("en-US"));
-
-            Assert.IsTrue(fbStrat.TriggerCondition(dt2));
+            Assert.IsTrue(fbStrat.IsStrategyValid());
         }
     }
 }
